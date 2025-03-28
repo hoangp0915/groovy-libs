@@ -36,10 +36,10 @@ def checkoutGit(String branch) {
 def getGitChanges() {
     try {
         def changes = ''
-        def prevCommit = env.GIT_PREVIOUS_SUCCESSFUL_COMMIT
-        if (prevCommit?.trim() && env.GIT_COMMIT) {
-            bat "git fetch"
-            def command = "@git log --oneline ${env.GIT_COMMIT}...${prevCommit}"
+        def prevCommit = env.GIT_PREVIOUS_COMMIT
+        def current = env.GIT_COMMIT
+        if (prevCommit?.trim() && env.GIT_COMMIT && prevCommit != current) {
+            def command = "@git log --oneline ${current}...${prevCommit}"
             changes = bat(script: command, returnStdout: true).trim()
         }
         return changes

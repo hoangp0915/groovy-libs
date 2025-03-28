@@ -17,7 +17,7 @@ def checkoutGit(String branch) {
         $class: 'GitSCM',
         branches: [[name: branch]],
         extensions: [ lfs() ],
-        userRemoteConfigs: [[url: evn.GIT_URL]]
+        userRemoteConfigs: [[url: env.GIT_URL]]
     ])
 
     env.GIT_COMMIT = scmVars.GIT_COMMIT

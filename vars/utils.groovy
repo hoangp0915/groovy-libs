@@ -34,12 +34,18 @@ def checkoutGit(String branch) {
 }
 
 def getGitChanges() {
-    def changes = ''
-    if (env.GIT_PREVIOUS_SUCCESSFUL_COMMIT && env.GIT_COMMIT) {
-        def command = "@git log --oneline ${env.GIT_COMMIT}...${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}"
-        changes = bat(script: command, returnStdout: true).trim()
+    try {
+        def changes = ''
+        if (env.GIT_PREVIOUS_SUCCESSFUL_COMMIT && env.GIT_COMMIT) {
+            bat "git fetch"
+            def command = "@git log --oneline ${env.GIT_COMMIT}...${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}"
+            changes = bat(script: command, returnStdout: true).trim()
+        }
+        return changes
+    } catch (Exception e) {
+        echo "❌ Failed to get Git changes. Error: ${e.getMessage()}"
+        return null
     }
-    return changes
 }
 
 def buildNotificationMessage(Map params) {
